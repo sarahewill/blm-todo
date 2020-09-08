@@ -69,6 +69,21 @@ body {
 }
 /*END RESETS*/
 /* GLOBAL STYLES */
+
+.row {
+
+  display: flex;
+
+}
+.drop-wrapper {
+  border: 1px solid green;
+  min-height: 300px;
+}
+.col-wrapper {
+  background: #efefef;
+  min-height: 300px;
+  border: 1px solid red;
+}
 .form-group > input[type="text"] {
   display: inline-block;
   margin-top: 0.4rem;

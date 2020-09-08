@@ -1,6 +1,49 @@
-import React, { useState } from "react";
+import React, { Fragment, useRef, useState} from "react";
+import {useDrop, useDrag} from "react-dnd";
+import ITEM_TYPE from "../data/item";
 
-export default function Todo(props) {
+const Todo = ({ task, index, moveItem, deleteTask, editTask, status }) => {
+    const ref = useRef(null);
+
+    const [, drop] = useDrop({
+        accept: ITEM_TYPE,
+        hover(task, monitor) {
+            if (!ref.current) {
+                return
+            }
+            const dragIndex = task.index;
+            const hoverIndex = index;
+            console.log('index', dragIndex, hoverIndex)
+
+            if (dragIndex === hoverIndex) {
+                return
+            }
+
+            const hoveredRect = ref.current.getBoundingClientRect();
+            const hoverMiddleY = (hoveredRect.bottom - hoveredRect.top) / 2;
+            const mousePosition = monitor.getClientOffset();
+            const hoverClientY = mousePosition.y - hoveredRect.top;
+
+            if (dragIndex < hoverIndex && hoverClientY < hoverMiddleY) {
+                return;
+            }
+
+            if (dragIndex > hoverIndex && hoverClientY > hoverMiddleY) {
+                return;
+            }
+            moveItem(dragIndex, hoverIndex);
+            task.index = hoverIndex;
+        },
+    });
+
+    const [{ isDragging }, drag] = useDrag({
+        item: { type: ITEM_TYPE, ...task, index },
+        collect: monitor => ({
+            isDragging: monitor.isDragging()
+        })
+    });
+
+    drag(drop(ref));
     const [isEditing, setEditing] = useState(false);
     const [newName, setNewName] = useState('');
     function handleChange(e) {
@@ -8,18 +51,18 @@ export default function Todo(props) {
     }
     function handleSubmit(e) {
         e.preventDefault();
-        props.editTask(props.id, newName);
+        editTask(task.id, newName);
         setNewName("");
         setEditing(false);
     }
     const editingTemplate = (
         <form className="stack-small" onSubmit={handleSubmit}>
             <div className="form-group">
-                <label className="todo-label" htmlFor={props.id}>
-                    New name for {props.name}
+                <label className="todo-label" htmlFor={task.id}>
+                    New name for {task.title}
                 </label>
                 <input
-                    id={props.id}
+                    id={task.id}
                     className="todo-text"
                     type="text"
                     value={newName}
@@ -33,41 +76,41 @@ export default function Todo(props) {
                     onClick={() => setEditing(false)}
                 >
                     Cancel
-                    <span className="visually-hidden">renaming {props.name}</span>
+                    <span className="visually-hidden">renaming {task.title}</span>
                 </button>
                 <button type="submit" className="btn btn__primary todo-edit">
                     Save
-                    <span className="visually-hidden">new name for {props.name}</span>
+                    <span className="visually-hidden">new name for {task.title}</span>
                 </button>
             </div>
         </form>
     );
     const viewTemplate = (
-        <div className="stack-small">
-            <div className="c-cb">
-                <input
-                    id={props.id}
-                    type="checkbox"
-                    defaultChecked={props.completed}
-                    onChange={() => props.toggleTaskCompleted(props.id)}
-                />
-                <label className="todo-label" htmlFor={props.id}>
-                    {props.name}
-                </label>
+        <Fragment>
+            <div
+                ref={ref}
+                style={{ opacity: isDragging ? 0 : 1 }}
+                className={"item"}
+            >
+                <div className={"color-bar"} style={{ backgroundColor: status.color }}/>
+                <p className={"item-title"}>{task.title}</p>
+                <p className={"item-status"}>{task.icon}</p>
+                <div className="btn-group">
+                    <button type="button" className="btn" onClick={() => setEditing(true)}>
+                        Edit <span className="visually-hidden">{task.title}</span>
+                    </button>
+                    <button
+                        type="button"
+                        className="btn btn__danger"
+                        onClick={() => deleteTask(task.id)}
+                    >
+                        Delete <span className="visually-hidden">{task.name}</span>
+                    </button>
+                </div>
             </div>
-            <div className="btn-group">
-                <button type="button" className="btn" onClick={() => setEditing(true)}>
-                    Edit <span className="visually-hidden">{props.name}</span>
-                </button>
-                <button
-                    type="button"
-                    className="btn btn__danger"
-                    onClick={() => props.deleteTask(props.id)}
-                >
-                    Delete <span className="visually-hidden">{props.name}</span>
-                </button>
-            </div>
-        </div>
+        </Fragment>
     );
     return <li className="todo">{isEditing ? editingTemplate : viewTemplate}</li>;
 }
+
+export default Todo;
