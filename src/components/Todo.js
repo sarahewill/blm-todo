@@ -1,6 +1,9 @@
 import React, { Fragment, useRef, useState} from "react";
 import {useDrop, useDrag} from "react-dnd";
 import ITEM_TYPE from "../data/item";
+import IconButton from '@material-ui/core/IconButton';
+
+import { Delete, Edit } from "@material-ui/icons";
 
 const Todo = ({ task, index, moveItem, deleteTask, editTask, status }) => {
     const ref = useRef(null);
@@ -93,20 +96,24 @@ const Todo = ({ task, index, moveItem, deleteTask, editTask, status }) => {
                 className={"item"}
             >
                 <div className={"color-bar"} style={{ backgroundColor: status.color }}/>
-                <p className={"item-title"}>{task.title}</p>
-                <p className={"item-status"}>{task.icon}</p>
-                <div className="btn-group">
-                    <button type="button" className="btn" onClick={() => setEditing(true)}>
-                        Edit <span className="visually-hidden">{task.title}</span>
-                    </button>
-                    <button
-                        type="button"
-                        className="btn btn__danger"
-                        onClick={() => deleteTask(task.id)}
-                    >
-                        Delete <span className="visually-hidden">{task.name}</span>
-                    </button>
+
+                <div className={"item-container"}>
+                    <IconButton type="button" className="btn" onClick={() => setEditing(true)}>
+                        <Edit />
+                    </IconButton>
+                    <span className={"item-title"}>{task.title}</span>
+                    <div className="btn-group">
+                        <IconButton
+                            type="button"
+                            className="btn btn__danger"
+                            onClick={() => deleteTask(task.id)}
+                        >
+                            <Delete />
+                        </IconButton>
+                    </div>
+
                 </div>
+
             </div>
         </Fragment>
     );

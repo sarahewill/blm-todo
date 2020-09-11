@@ -58,7 +58,7 @@ function Home() {
                 {statuses.map(s => {
                     return(
                         <div key={s.status} className={"col-wrapper"}>
-                            <h2 className={"col-header"}>{s.status.toUpperCase()}</h2>
+                            <h3 className={"col-header"}>{s.status.toUpperCase()}</h3>
                             <Drop onDrop={onDrop} status={s.status}>
                                 <Target>
                                     {tasks
