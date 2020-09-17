@@ -1,9 +1,9 @@
 :root {
   --main-bg-color: #8a2be2;
   --main-txt-color: #4d4d4d;
+  --main-border-color: #cccccc;
   --main-padding: 20px;
 }
-
 html {
   font: 62.5% / 1.15 sans-serif;
 }
@@ -13,25 +13,21 @@ h2 {
   font-size: 2rem;
   margin-bottom: 0;
 }
-ul {
-  list-style: none;
-  padding: 0;
+h3 {
+  font-size: 1.6rem;
+  margin: 0;
+  padding-left: 0;
+}
+button {
+  font-size: 1.33rem!important;
 }
 body {
   width: 100%;
   max-width: 88rem;
   margin: 0 auto;
-  font: 1.6rem/1.25 Arial, sans-serif;
   background-color: var(--main-bg-color);
   color: var(--main-txt-color);
 }
-@media screen and (min-width: 620px) {
-  body {
-    font-size: 1.9rem;
-    line-height: 1.31579;
-  }
-}
-
 /* GLOBAL STYLES */
 
 .row {
@@ -42,30 +38,41 @@ body {
 }
 .col-wrapper {
   background: #efefef;
-  border: 1px dashed grey;
+  border: 1px dashed var(--main-border-color);
   padding: var(--main-padding);
   width: 33.33%;
 }
-.item {
+.task {
+  display: flex;
   background: white;
-  height: 100px;
+  height: 150px;
   margin: 10px 0;
 }
-.item-title {
-  padding-top: 8px;
-  width: 65%;
+.task-title {
+  height: 30%;
+  font-size: 1.6rem;
+  padding: 8px 0 0 10px;
 }
-.item-container {
+.task-container {
+  align-items: flex-start;
   display: flex;
-  flex-direction: row;
-  padding-top: 10px;
+  flex-direction: column;
+  padding: 10px 10px 0 10px;
+  width: 100%;
+}
+.form-container {
+  padding: 0 20px;
 }
 .form-group > input[type="text"] {
   display: inline-block;
   margin-top: 0.4rem;
 }
 .color-bar {
-  height: 10px;
+  width: 10px;
+}
+.btn-group {
+  display: flex;
+  flex-direction: row;
 }
 .btn__primary {
   background-color: #5f9ea0;
@@ -87,20 +94,25 @@ body {
   white-space: nowrap;
 }
 .input-container {
-  display: table;
-  margin: auto auto 20px auto;
-}
-.todo {
   display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
+  flex-direction: column;
+  gap: 12px;
+  margin: auto auto 20px auto;
+  width: 40%;
+}
+.input-container input{
+  font-size: 1.6rem;
+}
+.todo span {
+  font-size: 1.3rem;
+  height: 40%;
+  padding-left: 10px;
 }
 .todo > * {
   width: 100%;
 }
 
 /* END GLOBAL STYLES */
-
 .label__lg {
   font-weight: 300;
   line-height: 1.01567;
@@ -112,5 +124,6 @@ body {
 [class*="__lg"] {
   display: inline-block;
   font-size: 1.9rem;
+  margin-bottom: 5px;
 }
 

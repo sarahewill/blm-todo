@@ -1,20 +1,18 @@
-import '../App.css';
 import React, { useState } from "react";
 import { data, statuses } from "../data";
 import Drop from "../components/Drop";
 import Target from "../components/Target";
 import Todo from "../components/Todo";
 import Form from "../components/Form";
+
 function Home() {
     const [tasks, setTasks] = useState(data);
 
     const onDrop = (task, monitor, status) => {
-        const mapping = statuses.find(si => si.status === status);
-
         setTasks(prevState => {
             const newTasks = prevState
                 .filter(t => t.id !== task.id)
-                .concat({icon: mapping.icon, id: task.id, title: task.title, content: task.content, status});
+                .concat({ id: task.id, title: task.title, content: task.content, status});
             return [ ...newTasks];
         });
     };
@@ -28,9 +26,9 @@ function Home() {
         });
     };
 
-    function addTask(title) {
+    function addTask(title, content) {
         const taskId = tasks.length + 1;
-        const newTask = { id: taskId, title: title, status: "open" };
+        const newTask = { id: taskId, title: title, content: content, status: "open" };
         setTasks([...tasks, newTask]);
     }
 
@@ -52,12 +50,12 @@ function Home() {
     }
 
     return (
-        <div>
+        <main>
             <Form addTask={addTask} />
             <div className={"row"}>
                 {statuses.map(s => {
                     return(
-                        <div key={s.status} className={"col-wrapper"}>
+                        <section key={s.status} className={"col-wrapper"}>
                             <h3 className={"col-header"}>{s.status.toUpperCase()}</h3>
                             <Drop onDrop={onDrop} status={s.status}>
                                 <Target>
@@ -72,11 +70,11 @@ function Home() {
                                     }
                                 </Target>
                             </Drop>
-                        </div>
+                        </section>
                     )
                 })}
             </div>
-        </div>
+        </main>
 
     );
 }

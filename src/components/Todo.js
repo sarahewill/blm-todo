@@ -1,9 +1,7 @@
 import React, { Fragment, useRef, useState} from "react";
 import {useDrop, useDrag} from "react-dnd";
 import ITEM_TYPE from "../data/item";
-import IconButton from '@material-ui/core/IconButton';
-
-import { Delete, Edit } from "@material-ui/icons";
+import Button from "@material-ui/core/Button";
 
 const Todo = ({ task, index, moveItem, deleteTask, editTask, status }) => {
     const ref = useRef(null);
@@ -59,65 +57,64 @@ const Todo = ({ task, index, moveItem, deleteTask, editTask, status }) => {
         setEditing(false);
     }
     const editingTemplate = (
-        <form className="stack-small" onSubmit={handleSubmit}>
-            <div className="form-group">
-                <label className="todo-label" htmlFor={task.id}>
-                    New name for {task.title}
-                </label>
-                <input
-                    id={task.id}
-                    className="todo-text"
-                    type="text"
-                    value={newName}
-                    onChange={handleChange}
-                />
-            </div>
-            <div className="btn-group">
-                <button
-                    type="button"
-                    className="btn todo-cancel"
-                    onClick={() => setEditing(false)}
-                >
-                    Cancel
-                    <span className="visually-hidden">renaming {task.title}</span>
-                </button>
-                <button type="submit" className="btn btn__primary todo-edit">
-                    Save
-                    <span className="visually-hidden">new name for {task.title}</span>
-                </button>
-            </div>
-        </form>
+        <Fragment>
+            <form className={'form-container'} onSubmit={handleSubmit}>
+                <div className="form-group">
+                    <input
+                        id={task.id}
+                        className="todo-text"
+                        type="text"
+                        value={newName}
+                        onChange={handleChange}
+                    />
+                </div>
+                <div className="btn-group">
+                    <Button
+                        type="button"
+                        className="btn todo-cancel"
+                        onClick={() => setEditing(false)}
+                    >
+                        Cancel
+                        <span className="visually-hidden">renaming {task.title}</span>
+                    </Button>
+                    <Button type="submit" className="btn btn__primary todo-edit">
+                        Save
+                        <span className="visually-hidden">new name for {task.title}</span>
+                    </Button>
+                </div>
+            </form>
+        </Fragment>
     );
     const viewTemplate = (
         <Fragment>
-            <div
-                ref={ref}
-                style={{ opacity: isDragging ? 0 : 1 }}
-                className={"item"}
-            >
-                <div className={"color-bar"} style={{ backgroundColor: status.color }}/>
-
-                <div className={"item-container"}>
-                    <IconButton type="button" className="btn" onClick={() => setEditing(true)}>
-                        <Edit />
-                    </IconButton>
-                    <span className={"item-title"}>{task.title}</span>
-                    <div className="btn-group">
-                        <IconButton
-                            type="button"
-                            className="btn btn__danger"
-                            onClick={() => deleteTask(task.id)}
-                        >
-                            <Delete />
-                        </IconButton>
-                    </div>
-
-                </div>
-
+            <h3 className={"task-title"}>{task.title}</h3>
+            <span>{task.content}</span>
+            <div className="btn-group">
+                <Button onClick={() => setEditing(true)}>
+                    Edit
+                </Button>
+                <Button
+                    onClick={() => deleteTask(task.id)}
+                >
+                    Delete
+                </Button>
             </div>
         </Fragment>
     );
-    return <li className="todo">{isEditing ? editingTemplate : viewTemplate}</li>;
+    return <div className="todo">
+                <div
+                ref={ref}
+                style={{ opacity: isDragging ? 0 : 1 }}
+                className={"task"}
+                >
+                    <div className={"color-bar"} style={{ backgroundColor: status.color }}/>
+                    <div className={"task-container"}>
+
+                        {isEditing ? editingTemplate : viewTemplate}
+
+                    </div>
+                </div>
+        </div>;
 }
 
 export default Todo;
